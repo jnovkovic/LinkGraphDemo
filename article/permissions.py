@@ -18,9 +18,11 @@ class IsArticleOwner(permissions.BasePermission):
     Check if user is set as a article writer
     """
     def has_permission(self, request, view):
-        return Article.objects.filter(pk=view.kwargs['article_id'],
-                                      writer=request.user,
-                                      status=Article.NEW).exists()
+        return Article.objects\
+            .filter(pk=view.kwargs['article_id'],
+                    writer=request.user,
+                    status__in=[Article.NEW, Article.IN_REVIEW])\
+            .exists()
 
 
 class IsArticleOpenForApproval(permissions.BasePermission):
